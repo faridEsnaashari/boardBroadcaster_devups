@@ -1,0 +1,38 @@
+version: "2"
+
+networks:
+  boardbroadcaster-network:
+    external: true
+
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0.3-ubuntu2204
+    container_name: boardbroadcaster-mongodb-container
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ../mongodb:/data/db
+    networks:
+      - boardbroadcaster-network
+
+  redis:
+    image: redis:6.0-alpine
+    container_name: boardbroadcaster-redis-container
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ../redis:/data
+    networks:
+      - boardbroadcaster-network
+    environment:
+      - REDIS_ARGS=--requirepass 13578642Redi@ --user default
+
+  api:
+    image: boardbroadcaster-api-image
+    build: ../../api
+    container_name: boardbroadcaster-api-container
+    env_file: ./.env.api
+    ports:
+      - "3001:3001"
+    networks:
+      - boardbroadcaster-network

@@ -1,0 +1,16 @@
+version: "2"
+
+networks:
+  boardbroadcaster-network:
+    external: true
+
+services:
+  app:
+    build: ../../nextApp
+    image: boardbroadcaster-app-image
+    container_name: boardbroadcaster-app-container
+    env_file: ./.env.app
+    ports:
+      - "3000:3000"
+    networks:
+      - boardbroadcaster-network
